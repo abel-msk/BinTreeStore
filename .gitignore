@@ -1,6 +1,9 @@
 ._*
 _*
 *.o
+*.code-workspace
+*.dSYM
+*.a
 _*/**
 **/build
 **/build/**
