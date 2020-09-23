@@ -1,0 +1,24 @@
+{
+    "name": "BinTreeStore",
+    "version": "0.0.1",
+    "description": "C++ class Implements binary tree structure for fast retrieve data by the key. Main goal is to use without addition library like string or hash.",
+    "keywords": "list structure tree",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/abel-msk/BinTreeStore.git"
+    },
+    "authors":
+    [
+      {
+        "name": "Artyom Belyaev",
+        "email": "Artem.Belyaev@gmail.com"
+      }
+    ],
+    "license": "APACHE2",
+    "homepage": "https://github.com/abel-msk/BinTreeStore",
+    "dependencies": {
+    },
+    "frameworks": "*",
+    "platforms": "*"
+  }
