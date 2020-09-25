@@ -1,11 +1,9 @@
 #include "BinaryTree.h"
 #include "BinaryTreeNode.h"
 /**
- *   IMPLEMENTATION
+ *   IMPLEMENTATION BinaryTreeBase and derived BinaryTree classes
+ *   
  */
-
-
-
 
 template<class K, class T, class C>
 BinaryTreeBase<K,T,C>::BinaryTreeBase() {
@@ -17,15 +15,26 @@ BinaryTreeBase<K,T,C>::BinaryTreeBase() {
 
 template<class K, class T, class C>
 BinaryTreeBase<K,T,C>::~BinaryTreeBase() {
+    // clearByNode(_head);
     clear();
     delete _foundCwP;
+    delete _emptyEL;
 }
+
+template<class K, class T, class C>
+void BinaryTreeBase<K,T,C>::clearByNode(BinaryTreeNode<K,T,C>* node) {
+    if (node != 0)
+    {
+        clearByNode((BinaryTreeNode<K,T,C>*)node->getLeft());
+        clearByNode((BinaryTreeNode<K,T,C>*)node->getRight());
+        delete node;
+    }
+};
 
 template<class K, class T, class C>
 BinaryTreeNode<K,T,C>* BinaryTreeBase<K,T,C>::createNode(K key,T* value) {
     return new BinaryTreeNode<K,T,C>(key, value);
 }
-
 
 template<class K, class T, class C>
 void BinaryTreeBase<K,T,C>::add(K key, T* value)
@@ -42,7 +51,6 @@ void BinaryTreeBase<K,T,C>::add(K key, T* value)
     _count++;
 }
  
-
 // Рекурсивная ставка.
 template<class K, class T, class C>
 void BinaryTreeBase<K,T,C>::addTo(BinaryTreeNode<K,T,C>* node, K key, T* value)
@@ -69,7 +77,6 @@ void BinaryTreeBase<K,T,C>::addTo(BinaryTreeNode<K,T,C>* node, K key, T* value)
     }
 }
 
-
 template<class K, class T, class C>
 T* BinaryTreeBase<K,T,C>::getByKey(K key) {
     _foundCwP = findWithParent(key);
@@ -79,12 +86,9 @@ T* BinaryTreeBase<K,T,C>::getByKey(K key) {
     return 0;
 }
 
-
-
 template<class K, class T, class C>
 bool BinaryTreeBase<K,T,C>::remove(K key) 
 {
- 
     // Находим удаляемый узел.
     _foundCwP = findWithParent(key);
     BinaryTreeNode<K,T,C>* current = (BinaryTreeNode<K,T,C>*)_foundCwP->current;
@@ -94,9 +98,7 @@ bool BinaryTreeBase<K,T,C>::remove(K key)
     if (current == 0) {
         return false;
     }
- 
     _count--;
-
     // Случай 1: Если нет детей справа, левый ребенок встает на место удаляемого.
     if (current->Right == 0) {
         if (parent == 0) {
@@ -148,7 +150,6 @@ bool BinaryTreeBase<K,T,C>::remove(K key)
             leftmostParent = leftmost; 
             leftmost = (BinaryTreeNode<K,T,C>*) leftmost->getLeft(); 
         }
-
         // Левое поддерево родителя становится правым поддеревом крайнего левого узла. 
         leftmostParent->Left = leftmost->Right; 
         // Левый и правый ребенок текущего узла становится левым и правым ребенком крайнего левого. 
@@ -177,23 +178,22 @@ bool BinaryTreeBase<K,T,C>::remove(K key)
     return true;
 }
 
-
 template<class K, class T, class C>
 bool BinaryTreeBase<K,T,C>::contains(K key)
 {
     _foundCwP = findWithParent(key);
     return  _foundCwP->current != 0;
 }
- 
-/// 
-/// Находит и возвращает первый узел с заданным значением. Если значение
-/// не найдено, возвращает null. Также возвращает родителя найденного узла (или null)
-/// для использования в методе Remove.
-/// 
+
+/**
+ *  Находит и возвращает первый узел с заданным значением. Если значение
+ *  не найдено, возвращает null. Также возвращает родителя найденного узла (или null)
+ *  для использования в методе Remove.
+ * @param key - ключ для поиска элемента дерева
+ */
 template<class K, class T, class C>
 findWithParentResult<K,T,C>* BinaryTreeBase<K,T,C>::findWithParent(K key)
 {
-    
     // Попробуем найти значение в дереве.
     _foundCwP->current = _head;
     _foundCwP->parent = NULL;
@@ -202,7 +202,6 @@ findWithParentResult<K,T,C>* BinaryTreeBase<K,T,C>::findWithParent(K key)
     while (_foundCwP->current != 0)
     {
         int cmpRes = _foundCwP->current->CompareTo((K)key);
- 
         if (cmpRes > 0)
         {
             // Если искомое значение меньше, идем налево.
@@ -216,17 +215,15 @@ findWithParentResult<K,T,C>* BinaryTreeBase<K,T,C>::findWithParent(K key)
             _foundCwP->current  = (BinaryTreeNode<K,T,C>*)_foundCwP->current->getRight();
         }
         else
-        {
-            // Если равны, то останавливаемся
-
+        {  // Если равны, то останавливаемся
             break;
         }
     }
- 
     return _foundCwP;
 }
 
 /**
+ *   Возвращает количество элементов в дереве.
 */
 template<class K, class T, class C>
 int BinaryTreeBase<K,T,C>::size()
@@ -236,55 +233,56 @@ int BinaryTreeBase<K,T,C>::size()
 
 template<class K, class T, class C>
 void BinaryTreeBase<K,T,C>::clear() {
-    _removeAction<T>*  action = new _removeAction<T>; 
-    postOrderTraversal(action,(BinaryTreeNode<K,T,C>*)_head);
-    delete action;
+    clearByNode(_head);
+    if (_foundCwP->current != NULL ) _foundCwP->current = NULL;
+    if (_foundCwP->parent != NULL )  _foundCwP->parent = NULL;
     _count = 0;
 }
 
 
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::preOrderTraversal(BinaryTreeAction<T>* action) {
+void BinaryTreeBase<K,T,C>::preOrderTraversal(BinaryTreeAction<K,T>* action) {
     preOrderTraversal(action, _head);
 }
 
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::preOrderTraversal(BinaryTreeAction<T>* action, BinaryTreeNode<K,T,C>* node) {
+void BinaryTreeBase<K,T,C>::preOrderTraversal(BinaryTreeAction<K,T>* action, BinaryTreeNode<K,T,C>* node) {
     if (node != 0) {
-        action->run(node->getValue());
+        action->run(node->getKey(),node->getValue());
         preOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->Left);
         preOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->Right);
     }
 }
 
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::postOrderTraversal(BinaryTreeAction<T>* action)
+void BinaryTreeBase<K,T,C>::postOrderTraversal(BinaryTreeAction<K,T>* action)
 {
     postOrderTraversal(action, _head);
 }
  
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::postOrderTraversal(BinaryTreeAction<T>* action, BinaryTreeNode<K,T,C>* node) {
+void BinaryTreeBase<K,T,C>::postOrderTraversal(BinaryTreeAction<K,T>* action, BinaryTreeNode<K,T,C>* node) {
     if (node != 0)
     {
         postOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->getLeft());
         postOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->getRight());
-        action->run(node->getValue());
+        action->run(node->getKey(), node->getValue());
     }
-}
+};
+
 
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::inOrderTraversal(BinaryTreeAction<T>* action)
+void BinaryTreeBase<K,T,C>::inOrderTraversal(BinaryTreeAction<K,T>* action)
 {
     inOrderTraversal(action, _head);
-}
+};
  
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::inOrderTraversal(BinaryTreeAction<T>* action, BinaryTreeNode<K,T,C>* node) {
+void BinaryTreeBase<K,T,C>::inOrderTraversal(BinaryTreeAction<K,T>* action, BinaryTreeNode<K,T,C>* node) {
     if (node != 0)
     {
         inOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->getLeft());
-        action->run(node->getValue());
+        action->run(node->getKey(),node->getValue());
         inOrderTraversal(action, (BinaryTreeNode<K,T,C>*)node->getRight());
     }
-}
+};
