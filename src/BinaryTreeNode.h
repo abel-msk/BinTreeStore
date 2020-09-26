@@ -1,5 +1,5 @@
-#ifndef _BINARY_TREE_NODE_H__
-#define _BINARY_TREE_NODE_H__
+#ifndef _BINARYTREE_NODE_H__
+#define _BINARYTREE_NODE_H__
 
 #include <string.h>
 
@@ -24,7 +24,7 @@ template <typename K, class T, class _cmp>
 class BinaryTreeNodeBase 
 {
     protected:
-    T* _value;
+    T _value;
     _cmp* _comparator;
     K _key;
 
@@ -32,13 +32,14 @@ class BinaryTreeNodeBase
     BinaryTreeNodeBase<K,T,_cmp>* Left;
     BinaryTreeNodeBase<K,T,_cmp>* Right;
 
-    BinaryTreeNodeBase(K key = 0, T* value = 0, _cmp* comp = new _cmp);
+    BinaryTreeNodeBase(K key, T value);
+    
     ~BinaryTreeNodeBase();
 
     virtual K getKey();
     virtual void setKey(K key);
-    virtual T* getValue();
-    virtual void setValue(T* value);
+    virtual T getValue();
+    virtual void setValue(T value);
     virtual BinaryTreeNodeBase<K,T,_cmp>* getLeft();
     virtual BinaryTreeNodeBase<K,T,_cmp>* getRight();
     virtual BinaryTreeNodeBase<K,T,_cmp>* setLeft(BinaryTreeNodeBase<K,T,_cmp>* lNode);
@@ -56,9 +57,9 @@ class BinaryTreeNodeBase
 
 
 template <typename K, class T, class _cmp>
-BinaryTreeNodeBase<K,T,_cmp>::BinaryTreeNodeBase(K key, T* value, _cmp* comp) {
+BinaryTreeNodeBase<K,T,_cmp>::BinaryTreeNodeBase(K key, T value) {
     _value = value;
-    _comparator = comp;
+    _comparator = new _cmp();
     _key = key;
     Left=0;
     Right=0;
@@ -80,13 +81,12 @@ int BinaryTreeNodeBase<K,T,_cmp>::CompareTo(K other) {
 }
 
 template <typename K, class T, class _cmp>
-T* BinaryTreeNodeBase<K,T,_cmp>::getValue() {
+T BinaryTreeNodeBase<K,T,_cmp>::getValue() {
     return _value;
 }
 
 template <typename K, class T, class _cmp>
-void BinaryTreeNodeBase<K,T,_cmp>::setValue(T* value) {
-    if (_value != 0) delete _value;
+void BinaryTreeNodeBase<K,T,_cmp>::setValue(T value) {
     _value = value;
 }
 
@@ -104,9 +104,8 @@ void BinaryTreeNodeBase<K,T,_cmp>::setKey(K key) {
 template <typename K, class T, class _cmp>
 BinaryTreeNodeBase<K,T,_cmp>::~BinaryTreeNodeBase() {
     delete _comparator;
-    delete _value;
-    // delete _key;
 }
+
 template <typename K, class T, class _cmp>
 BinaryTreeNodeBase<K,T,_cmp>* BinaryTreeNodeBase<K,T,_cmp>::getLeft() {
     return Left;
@@ -125,21 +124,105 @@ BinaryTreeNodeBase<K,T,_cmp>* BinaryTreeNodeBase<K,T,_cmp>::setRight(BinaryTreeN
 }
 
 
-/**
- *  For using with const char* key 
+/***************************************************************************************
+ * 
+ * 
+ *  partail specialization
+ * 
+ * 
+ * 
+ * 
  */
 
-template <class _K, class _T, class _C>
-class BinaryTreeNode:  public BinaryTreeNodeBase<_K,_T,_C> {
+template <class K, class T, class C>
+class BinaryTreeNode:  public BinaryTreeNodeBase<K,T,C> {
     public:
-    BinaryTreeNode(_K key =0, _T* value=0, _C* comp = new _C);
-    // int CompareTo(_K other);
+    BinaryTreeNode(K key, T value):BinaryTreeNodeBase<K,T,C>(key,value){}
+
+    //    BinaryTreeNodeBase<K,T,C>::_comparator->compare(
+    //        BinaryTreeNodeBase<K,T,C>::_key,
+    //        other);
+
+    // }
+    // int CompareTo(K other);
+    friend BinaryTreeNodeBase<K,T,C>;
 };
 
 
-template <class _K, class _T, class _C>
-BinaryTreeNode<_K,_T,_C>::BinaryTreeNode(_K key, _T* value, _C* comp):
-    BinaryTreeNodeBase<_K,_T,_C>(key,value,comp){}
+/**
+ *  
+ */
+
+template <class K, class T, class C>
+class BinaryTreeNode<K*,T*,C>:  public BinaryTreeNodeBase<K*,T*,C> {
+
+    public:
+    BinaryTreeNode(K* key, T* value):BinaryTreeNodeBase<K*,T*,C>(key,value){
+    }
+    ~BinaryTreeNode() {
+        delete BinaryTreeNodeBase<K*,T*,C>::_key;
+        delete BinaryTreeNodeBase<K*,T*,C>::_value;
+    }
+    int CompareTo(K* other) {
+       BinaryTreeNodeBase<K*,T*,C>::_comparator->compare(
+           BinaryTreeNodeBase<K*,T*,C>::_key,
+           other);
+    }
+    friend BinaryTreeNodeBase<K*,T*,C>;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+template <class K, class T, class C>
+class BinaryTreeNode<K,T*,C>:  public BinaryTreeNodeBase<K,T*,C> {
+
+    public:
+    BinaryTreeNode(K key, T* value):BinaryTreeNodeBase<K,T*,C>(key,value) {
+    }
+    ~BinaryTreeNode(){
+        delete BinaryTreeNodeBase<K,T*,C>::_value;
+    }
+    int CompareTo(K other) {
+       return BinaryTreeNodeBase<K,T*,C>::_comparator->compare(
+           BinaryTreeNodeBase<K,T*,C>::_key,
+           other);
+    }
+
+    T* getValue() {
+        return BinaryTreeNodeBase<K,T*,C>::_value;
+    }
+
+    friend BinaryTreeNodeBase<K,T*,C>;
+};
+
+
+
+template <class K, class T, class C>
+class BinaryTreeNode<K*,T,C>:  public BinaryTreeNodeBase<K*,T,C> {
+
+    public:
+    BinaryTreeNode(K* key, T value):BinaryTreeNodeBase<K*,T,C>(key,value){
+    }
+    ~BinaryTreeNode(){
+        delete BinaryTreeNodeBase<K*,T,C>::_key;
+    }
+    int CompareTo(K* other) {
+       BinaryTreeNodeBase<K*,T,C>::_comparator->compare(
+           BinaryTreeNodeBase<K*,T,C>::_key,
+           other);
+    }
+
+    friend BinaryTreeNodeBase<K*,T,C>;
+};
 
 
 // #include "BinaryTreeNode.tpp"

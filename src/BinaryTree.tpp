@@ -10,7 +10,7 @@ BinaryTreeBase<K,T,C>::BinaryTreeBase() {
     _head = 0;
     _count = 0;
     _foundCwP = new findWithParentResult<K,T,C>;
-    _emptyEL = new BinaryTreeNode<K,T,C>();
+    // _emptyEL = new BinaryTreeNode<K,T,C>(0,0);
 }
 
 template<class K, class T, class C>
@@ -18,7 +18,7 @@ BinaryTreeBase<K,T,C>::~BinaryTreeBase() {
     // clearByNode(_head);
     clear();
     delete _foundCwP;
-    delete _emptyEL;
+    // delete _emptyEL;
 }
 
 template<class K, class T, class C>
@@ -32,12 +32,12 @@ void BinaryTreeBase<K,T,C>::clearByNode(BinaryTreeNode<K,T,C>* node) {
 };
 
 template<class K, class T, class C>
-BinaryTreeNode<K,T,C>* BinaryTreeBase<K,T,C>::createNode(K key,T* value) {
+BinaryTreeNode<K,T,C>* BinaryTreeBase<K,T,C>::createNode(K key,T value) {
     return new BinaryTreeNode<K,T,C>(key, value);
 }
 
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::add(K key, T* value)
+void BinaryTreeBase<K,T,C>::add(K key, T value)
 {
     // Случай 1: Если дерево пустое, просто создаем корневой узел.
     if (_head == 0) {
@@ -53,7 +53,7 @@ void BinaryTreeBase<K,T,C>::add(K key, T* value)
  
 // Рекурсивная ставка.
 template<class K, class T, class C>
-void BinaryTreeBase<K,T,C>::addTo(BinaryTreeNode<K,T,C>* node, K key, T* value)
+void BinaryTreeBase<K,T,C>::addTo(BinaryTreeNode<K,T,C>* node, K key, T value)
 {
     // Случай 1: Вставляемое значение меньше значения узла
     if (node->CompareTo(key) > 0)
@@ -81,9 +81,10 @@ template<class K, class T, class C>
 T* BinaryTreeBase<K,T,C>::getByKey(K key) {
     _foundCwP = findWithParent(key);
     if ((_foundCwP != 0)  &&  (_foundCwP->current != 0)) {
-        return _foundCwP->current->getValue();
+        T* x= _foundCwP->current;
+        return x->getValue();
     }
-    return 0;
+    return nullptr;
 }
 
 template<class K, class T, class C>
