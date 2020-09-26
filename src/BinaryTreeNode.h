@@ -21,7 +21,7 @@ struct cmpLong {
  */
 
 template <typename K, class T, class _cmp>
-class BinaryTreeNodeBase 
+class BinaryTreeNodeBase
 {
     protected:
     T _value;
@@ -129,9 +129,6 @@ BinaryTreeNodeBase<K,T,_cmp>* BinaryTreeNodeBase<K,T,_cmp>::setRight(BinaryTreeN
  * 
  *  partail specialization
  * 
- * 
- * 
- * 
  */
 
 template <class K, class T, class C>
@@ -145,7 +142,7 @@ class BinaryTreeNode:  public BinaryTreeNodeBase<K,T,C> {
 
     // }
     // int CompareTo(K other);
-    friend BinaryTreeNodeBase<K,T,C>;
+    // friend BinaryTreeNodeBase<K,T,C>;
 };
 
 
@@ -164,22 +161,12 @@ class BinaryTreeNode<K*,T*,C>:  public BinaryTreeNodeBase<K*,T*,C> {
         delete BinaryTreeNodeBase<K*,T*,C>::_value;
     }
     int CompareTo(K* other) {
-       BinaryTreeNodeBase<K*,T*,C>::_comparator->compare(
+       return BinaryTreeNodeBase<K*,T*,C>::_comparator->compare(
            BinaryTreeNodeBase<K*,T*,C>::_key,
            other);
     }
-    friend BinaryTreeNodeBase<K*,T*,C>;
+    // friend BinaryTreeNodeBase<K*,T*,C>;
 };
-
-
-
-
-
-
-
-
-
-
 
 
 template <class K, class T, class C>
@@ -201,7 +188,7 @@ class BinaryTreeNode<K,T*,C>:  public BinaryTreeNodeBase<K,T*,C> {
         return BinaryTreeNodeBase<K,T*,C>::_value;
     }
 
-    friend BinaryTreeNodeBase<K,T*,C>;
+    // friend BinaryTreeNodeBase<K,T*,C>;
 };
 
 
@@ -216,12 +203,12 @@ class BinaryTreeNode<K*,T,C>:  public BinaryTreeNodeBase<K*,T,C> {
         delete BinaryTreeNodeBase<K*,T,C>::_key;
     }
     int CompareTo(K* other) {
-       BinaryTreeNodeBase<K*,T,C>::_comparator->compare(
+       return BinaryTreeNodeBase<K*,T,C>::_comparator->compare(
            BinaryTreeNodeBase<K*,T,C>::_key,
            other);
     }
 
-    friend BinaryTreeNodeBase<K*,T,C>;
+    // friend BinasryTreeNodeBase<K*,T,C>;
 };
 
 

@@ -1,5 +1,7 @@
 #include "BinaryTree.h"
 #include "BinaryTreeNode.h"
+#include <type_traits>
+
 /**
  *   IMPLEMENTATION BinaryTreeBase and derived BinaryTree classes
  *   
@@ -77,15 +79,16 @@ void BinaryTreeBase<K,T,C>::addTo(BinaryTreeNode<K,T,C>* node, K key, T value)
     }
 }
 
-template<class K, class T, class C>
-T* BinaryTreeBase<K,T,C>::getByKey(K key) {
-    _foundCwP = findWithParent(key);
-    if ((_foundCwP != 0)  &&  (_foundCwP->current != 0)) {
-        T* x= _foundCwP->current;
-        return x->getValue();
-    }
-    return nullptr;
-}
+// template<class K, class T, class C>
+// T* BinaryTreeBase<K,T,C>::getByKey(K key) {
+//     _foundCwP = findWithParent(key);
+//     if ((_foundCwP != 0)  &&  (_foundCwP->current != 0)) {
+//         T x= _foundCwP->current->getValue();
+
+//             return &x;
+//     }
+//     return nullptr;
+// }
 
 template<class K, class T, class C>
 bool BinaryTreeBase<K,T,C>::remove(K key) 
