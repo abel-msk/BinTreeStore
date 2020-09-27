@@ -75,7 +75,7 @@ class BinaryTree<_K,_T*,_C>: public BinaryTreeBase<_K,_T*,_C> {
     BinaryTree():BinaryTreeBase<_K,_T*,_C>(){}
 
     _T* getByKey(_K key) {
-        BinaryTreeBase<_K,_T*,_C>::_foundCwP = findWithParent(key);
+        BinaryTreeBase<_K,_T*,_C>::_foundCwP = this->findWithParent(key);
         if ((BinaryTreeBase<_K,_T*,_C>::_foundCwP != 0)  &&
           (BinaryTreeBase<_K,_T*,_C>::_foundCwP->current != 0)) {
             return BinaryTreeBase<_K,_T*,_C>::_foundCwP->current->getValue();
@@ -91,7 +91,7 @@ class BinaryTree<_K*,_T*,_C>: public BinaryTreeBase<_K*,_T*,_C> {
     BinaryTree():BinaryTreeBase<_K*,_T*,_C>(){}
 
     _T* getByKey(_K* key) {
-        BinaryTreeBase<_K*,_T*,_C>::_foundCwP = BinaryTreeBase<_K*,_T*,_C>::findWithParent(key);
+        BinaryTreeBase<_K*,_T*,_C>::_foundCwP = this->findWithParent(key);
         if ((BinaryTreeBase<_K*,_T*,_C>::_foundCwP != 0)  &&
           (BinaryTreeBase<_K*,_T*,_C>::_foundCwP->current != 0)) {
             return BinaryTreeBase<_K*,_T*,_C>::_foundCwP->current->getValue();

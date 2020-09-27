@@ -1,6 +1,8 @@
 #include "BinaryTree.h"
 #include "BinaryTreeNode.h"
 #include <type_traits>
+#include <stdio.h>
+#include <string.h>
 
 /**
  *   IMPLEMENTATION BinaryTreeBase and derived BinaryTree classes
@@ -12,20 +14,17 @@ BinaryTreeBase<K,T,C>::BinaryTreeBase() {
     _head = 0;
     _count = 0;
     _foundCwP = new findWithParentResult<K,T,C>;
-    // _emptyEL = new BinaryTreeNode<K,T,C>(0,0);
 }
 
 template<class K, class T, class C>
 BinaryTreeBase<K,T,C>::~BinaryTreeBase() {
-    // clearByNode(_head);
     clear();
     delete _foundCwP;
-    // delete _emptyEL;
 }
 
 template<class K, class T, class C>
 void BinaryTreeBase<K,T,C>::clearByNode(BinaryTreeNode<K,T,C>* node) {
-    if (node != 0)
+    if (node != NULL)
     {
         clearByNode((BinaryTreeNode<K,T,C>*)node->getLeft());
         clearByNode((BinaryTreeNode<K,T,C>*)node->getRight());
@@ -146,14 +145,15 @@ bool BinaryTreeBase<K,T,C>::remove(K key)
     // Случай 3: Если у правого ребенка есть дети слева, крайний левый ребенок 
     // из правого поддерева заменяет удаляемый узел. 
     else { 
+
         // Найдем крайний левый узел. 
         BinaryTreeNode<K,T,C>* leftmost = (BinaryTreeNode<K,T,C>*)(current->getRight())->getLeft(); 
         BinaryTreeNode<K,T,C>* leftmostParent = (BinaryTreeNode<K,T,C>*)current->getRight(); 
-
         while (leftmost->Left != 0) { 
             leftmostParent = leftmost; 
             leftmost = (BinaryTreeNode<K,T,C>*) leftmost->getLeft(); 
         }
+
         // Левое поддерево родителя становится правым поддеревом крайнего левого узла. 
         leftmostParent->Left = leftmost->Right; 
         // Левый и правый ребенок текущего узла становится левым и правым ребенком крайнего левого. 
@@ -177,7 +177,7 @@ bool BinaryTreeBase<K,T,C>::remove(K key)
             }
         }
     }            
-
+    
     delete removed;
     return true;
 }
@@ -238,8 +238,9 @@ int BinaryTreeBase<K,T,C>::size()
 template<class K, class T, class C>
 void BinaryTreeBase<K,T,C>::clear() {
     clearByNode(_head);
-    if (_foundCwP->current != NULL ) _foundCwP->current = NULL;
-    if (_foundCwP->parent != NULL )  _foundCwP->parent = NULL;
+    // if (_foundCwP->current != NULL ) _foundCwP->current = NULL;
+    // if (_foundCwP->parent != NULL )  _foundCwP->parent = NULL;
+    _head = NULL;
     _count = 0;
 }
 

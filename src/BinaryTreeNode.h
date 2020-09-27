@@ -61,8 +61,8 @@ BinaryTreeNodeBase<K,T,_cmp>::BinaryTreeNodeBase(K key, T value) {
     _value = value;
     _comparator = new _cmp();
     _key = key;
-    Left=0;
-    Right=0;
+    Left=NULL;
+    Right=NULL;
 }
 
 
