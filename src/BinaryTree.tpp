@@ -1,6 +1,5 @@
 #include "BinaryTree.h"
 #include "BinaryTreeNode.h"
-#include <type_traits>
 #include <stdio.h>
 #include <string.h>
 

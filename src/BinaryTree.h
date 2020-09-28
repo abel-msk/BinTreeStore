@@ -59,42 +59,42 @@ class BinaryTreeBase {
 /**
     Specializtion for derived clas BinTree
 */
-template<class _K, class _T, class _C>
-class BinaryTree : public BinaryTreeBase<_K,_T,_C> {
+template<class _K, class _T, class _cmp>
+class BinaryTree : public BinaryTreeBase<_K,_T,_cmp> {
     public:
-    BinaryTree():BinaryTreeBase<_K,_T,_C>() {}
+    BinaryTree():BinaryTreeBase<_K,_T,_cmp>() {}
 };
 
 
 /**
     Partail specialization classes  for Bintree class  for use with const char* type key
 */
-template<class _K, class _T, class _C>
-class BinaryTree<_K,_T*,_C>: public BinaryTreeBase<_K,_T*,_C> {
+template<class _K, class _T, class _cmp>
+class BinaryTree<_K,_T*,_cmp>: public BinaryTreeBase<_K,_T*,_cmp> {
     public:
-    BinaryTree():BinaryTreeBase<_K,_T*,_C>(){}
+    BinaryTree():BinaryTreeBase<_K,_T*,_cmp>(){}
 
     _T* getByKey(_K key) {
-        BinaryTreeBase<_K,_T*,_C>::_foundCwP = this->findWithParent(key);
-        if ((BinaryTreeBase<_K,_T*,_C>::_foundCwP != 0)  &&
-          (BinaryTreeBase<_K,_T*,_C>::_foundCwP->current != 0)) {
-            return BinaryTreeBase<_K,_T*,_C>::_foundCwP->current->getValue();
+        BinaryTreeBase<_K,_T*,_cmp>::_foundCwP = this->findWithParent(key);
+        if ((BinaryTreeBase<_K,_T*,_cmp>::_foundCwP != 0)  &&
+          (BinaryTreeBase<_K,_T*,_cmp>::_foundCwP->current != 0)) {
+            return BinaryTreeBase<_K,_T*,_cmp>::_foundCwP->current->getValue();
         }
         return  nullptr;
     }      
 };
 
 
-template<class _K, class _T, class _C>
-class BinaryTree<_K*,_T*,_C>: public BinaryTreeBase<_K*,_T*,_C> {
+template<class _K, class _T, class _cmp>
+class BinaryTree<_K*,_T*,_cmp>: public BinaryTreeBase<_K*,_T*,_cmp> {
     public:
-    BinaryTree():BinaryTreeBase<_K*,_T*,_C>(){}
+    BinaryTree():BinaryTreeBase<_K*,_T*,_cmp>(){}
 
     _T* getByKey(_K* key) {
-        BinaryTreeBase<_K*,_T*,_C>::_foundCwP = this->findWithParent(key);
-        if ((BinaryTreeBase<_K*,_T*,_C>::_foundCwP != 0)  &&
-          (BinaryTreeBase<_K*,_T*,_C>::_foundCwP->current != 0)) {
-            return BinaryTreeBase<_K*,_T*,_C>::_foundCwP->current->getValue();
+        BinaryTreeBase<_K*,_T*,_cmp>::_foundCwP = this->findWithParent(key);
+        if ((BinaryTreeBase<_K*,_T*,_cmp>::_foundCwP != 0)  &&
+          (BinaryTreeBase<_K*,_T*,_cmp>::_foundCwP->current != 0)) {
+            return BinaryTreeBase<_K*,_T*,_cmp>::_foundCwP->current->getValue();
         }
         return  nullptr;
     }     
